@@ -22,10 +22,10 @@
                     Time: <span id="game-clock">00:00</span>
                 </div>
                 <div id="start-button">
-                    <button id="start"> Start Game</button>
+                    <button id="start" disabled="true"> Start Game</button>
                 </div>
                 <div id="stop-button">
-                    <button id="stop"> Finished </button>
+                    <button id="stop" disabled="true"> Finished </button>
                 </div>
 
             </div>
@@ -124,20 +124,30 @@
             </div>
 
             <div id="right-container">
-                <div class="right-container-item">
-                    <div class="ui input" id="login-form-div">
+                <div class="right-container-item" id="login-logout">
+                    <div class="ui input" id="login-form-div" style="display: block">
                         <form autocomplete="off" id="login-form" class="" action="index.html" method="post">
                             <h3>Login to Play:</h3>
-                            <input id="login-field" type="text" name="" value="" placeholder="username">
+                            <input id="login-field" type="text" name="username" placeholder="username">
                             <br><br>
                             <input type="submit">
                             <br><br>
                         </form>
                     </div>
+
+                    <button id="logout" style="display: none">Log Out</button>
+
                 </div>
+                    
+                
+                
 
                 <div class="right-container-item" id="leaderboard-div">
                     <button id="leaderboard">LeaderBoard</button>
+                </div>
+
+                <div class="right-container-item" id="games-div">
+                    <button id="my-games" disabled="true">My Games</button>
                 </div>
 
             </div>
