@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <title>Memory Game</title>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+ 
+    <div class="page-container">
+        <div id="header">
+                ECOMEMO
+        </div>
+
+        <div class="wrapper">
+        
+            <div id="left-container">
+                <div class="ui blue message floated segment" id ="game-clock-div">
+                    Time: <span id="game-clock">00:00</span>
+                </div>
+                <div id="start-button">
+                    <button id="start"> Start Game</button>
+                </div>
+                <div id="stop-button">
+                    <button id="stop"> Finished </button>
+                </div>
+
+            </div>
+
+            <div class="memory-game">
+                
+                <div class="memory-card" data-framework="recycle1">
+                    <img class="front-face" src="img/001-recycle.svg" alt="recycle1" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle1">
+                    <img class="front-face" src="img/recycle1.svg" alt="recycle1" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle2">
+                    <img class="front-face" src="img/002-recycle.svg" alt="recycle2" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle2">
+                    <img class="front-face" src="img/002-recycle.svg" alt="recycle2" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle3">
+                    <img class="front-face" src="img/003-recycle.svg" alt="recycle3" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle3">
+                    <img class="front-face" src="img/003-recycle.svg" alt="recycle3" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle4">
+                    <img class="front-face" src="img/004-recycle.svg" alt="recycle4" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle4">
+                    <img class="front-face" src="img/recycle4.svg" alt="recycle4" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle5">
+                    <img class="front-face" src="img/005-recycle.svg" alt="recycle5" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle5">
+                    <img class="front-face" src="img/005-recycle.svg" alt="recycle5" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle6">
+                    <img class="front-face" src="img/006-recycle.svg" alt="recycle6" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle6">
+                    <img class="front-face" src="img/006-recycle.svg" alt="recycle6" />
+                <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle7">
+                    <img class="front-face" src="img/007-recycle.svg" alt="recycle7" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle7">
+                    <img class="front-face" src="img/recycle7.svg" alt="recycle7" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle-symbol">
+                    <img class="front-face" src="img/recycle-symbol.svg" alt="recycle-symbol" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycle-symbol">
+                    <img class="front-face" src="img/recyclable.svg" alt="recycle-symbol" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+
+                <div class="memory-card" data-framework="recycled">
+                    <img class="front-face" src="img/recycled.svg" alt="recycled" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+                
+                <div class="memory-card" data-framework="recycled">
+                    <img class="front-face" src="img/recycleddes.svg" alt="recycled" />
+                    <img class="back-face" src="img/017-recycling box.svg" alt="RecycleLogo" />
+                </div>
+            </div>
+
+            <div id="right-container">
+                <div class="right-container-item">
+                    <div class="ui input" id="login-form-div">
+                        <form autocomplete="off" id="login-form" class="" action="index.html" method="post">
+                            <h3>Login to Play:</h3>
+                            <input id="login-field" type="text" name="" value="" placeholder="username">
+                            <br><br>
+                            <input type="submit">
+                            <br><br>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="right-container-item" id="leaderboard-div">
+                    <button id="leaderboard">LeaderBoard</button>
+                </div>
+
+            </div>
+        
+        </div>
+
+
+        <div id="footer">
+                Created by <a href="https://github.com/moliver4" target="_blank"> Tiffany Tang</a> 
+        </div>
+    </div>
+
+
+    
+    
+
+  <script src="scripts.js"></script>
+</body>
+</html>
