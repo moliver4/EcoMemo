@@ -5,25 +5,26 @@ window.addEventListener('DOMContentLoaded', e => {
     const loginForm = document.querySelector("#login-form")
     const cards = document.querySelectorAll('.memory-card');
     const logout = document.querySelector("#logout")
-    const startbutton = document.querySelector("#start")
-    const stopbutton = document.querySelector("#stop")
+    const startButton = document.querySelector("#start")
+    const stopButton = document.querySelector("#stop")
 
     cards.forEach(card => card.addEventListener('click', flipCard));
     shuffle()
 
     let username;
-    let clockCounter=0;
+    let pairs = 0;
+    let clockCounter = 0;
     let signedIn = false;
-    let timer = 0;
+    var timer;
     let hasFlippedCard = false;
-    let lockBoard = false; //board is locked until login
+    let lockBoard = true; //board is locked until login
     let firstCard, secondCard;
 
 //login stuff
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault()
         toggleLogOut()
-        toggleDisable(startbutton)
+        toggleDisable(startButton)
         signedIn = true;
         username = e.target.username.value
 
@@ -47,33 +48,52 @@ window.addEventListener('DOMContentLoaded', e => {
         }
     }
 
-    startbutton.addEventListener('click', (e) => {
-        e.preventDefault()
-        toggleDisable(stopbutton)
-        startGame()
-    })
+    startButton.addEventListener('click', (e) => startGame())
+    stopButton.addEventListener('click', (e) => stopGame())
 
     function startGame() {
-        
+        toggleDisable(stopButton)
+        restartText();
+        lockBoard = false;
+        pairs = 0;
+        shuffle()
+        clockCounter = 0;
         gameClock.innerText = "00:00";
-        let timer = setInterval(gameClockFunction, 1000)
+        clearInterval(timer)
+        timer = setInterval(gameClockFunction, 1000)
+        
     }
 
+    function stopGame() {
+        clearInterval(timer)
+    }
+
+
+    //toggles the Start/Restart Button
+    function restartText(){
+        if (startButton.textContent === "Start Game") {
+            startButton.textContent = "Restart Game";
+        } 
+    }
+//calculate score
+    function calculateScore() {
+
+    }
 
 //clock stuff
 
     function gameClockFunction(){
         ++clockCounter
-        gameClock.innerText = clockCounter.toString().toMMSS()
+        gameClock.innerText = clockCounter.toString(10).toMMSS()
     }
 
     String.prototype.toMMSS = function () {
-        var sec_num = parseInt(this, 10); // don't forget the second param
-        var minutes = Math.floor((sec_num) / 60);
-        var seconds = sec_num - (minutes * 60);
+        var totalSeconds = parseInt(this, 10);
+        var minutes = Math.floor((totalSeconds) / 60); 
+        var seconds = totalSeconds - (minutes * 60);
   
-        if (minutes < 10) {minutes = "0"+minutes;}
-        if (seconds < 10) {seconds = "0"+seconds;}
+        if (minutes < 10) {minutes = "0"+ minutes;}
+        if (seconds < 10) {seconds = "0"+ seconds;}
         return minutes + ':' + seconds;
     }
 
@@ -111,10 +131,15 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
     function disableCards() {
+        pairs++
+        console.log(pairs)
         firstCard.removeEventListener('click', flipCard);
         secondCard.removeEventListener('click', flipCard);
 
         resetBoard();
+        if (pairs === 9) {
+            toggleDisable(stopButton); //allow stop when all cards are flipped
+        }
     }
 
     function unflipCards() {
@@ -134,6 +159,7 @@ window.addEventListener('DOMContentLoaded', e => {
     }
     function shuffle() {
         cards.forEach(card => {
+            card.classList.remove('flip')
             let randomPos = Math.floor(Math.random() * 12);
             card.style.order = randomPos;
         });
