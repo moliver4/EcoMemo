@@ -1,3 +1,5 @@
+const URL = "http://localhost:3000"
+
 window.addEventListener('DOMContentLoaded', e => {
 
     const gameClock = document.querySelector("#game-clock")
@@ -7,8 +9,9 @@ window.addEventListener('DOMContentLoaded', e => {
     const startButton = document.querySelector("#start")
     const stopButton = document.querySelector("#stop")
     const saveModal = document.querySelector("#save-game-modal")
+    const saveGameForm = document.querySelector("#save-game-form")
     
-
+    // saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
     cards.forEach(card => card.addEventListener('click', flipCard));
     shuffle()
 
@@ -27,12 +30,32 @@ window.addEventListener('DOMContentLoaded', e => {
 //login stuff
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault()
+        username = e.target.username.value
+        let body = {username: username}
+        if (username){
+            handleSignIn(body)
+        } else {
+            alert("Please enter a username")
+        }
         toggleLogOut()
         toggleDisable(startButton)
         signedIn = true;
-        username = e.target.username.value
+        
 
     })
+
+    function handleSignIn(body) {
+        fetch(`${URL}/users/`, {
+            method: 'POST',
+            headers: { 
+                "Content-Type": "application/json", 
+                "Accept": "application/json"},
+            body: JSON.stringify(body)
+          })
+          .then(res => res.json())
+          .then(data => console.log(data))
+    }
+    
 
     function toggleLogOut() {
         if (logout.style.display === "none") {
@@ -82,19 +105,28 @@ window.addEventListener('DOMContentLoaded', e => {
         clearInterval(timer)
         let timerText = gameClock.innerHTML;
         officialSeconds = calculateSeconds() //working, gives total seconds
-        const div = document.createElement('div');
-        const pg1 = document.createElement('p');
-        pg1.className = "final-time";
-        pg1.textContent = `Your Final Time: ${timerText}`
-        div.appendChild(pg1)
-        saveModal.firstElementChild.appendChild(div)
+        const div = document.querySelector(".final-time")
+        const h5 = document.createElement('h5');
+        h5.textContent = `Your Final Time: ${timerText}`
+        div.appendChild(h5)
         displayModal(saveModal)
-
-
 
     }
 
+    // function handleSubmission(e) {
+    //     e.preventDefault()
+    //     let comment = e.target.comment.value 
+    //     const body = {username: username, "totaltime": officialSeconds, "comment": comment}
+    //     saveGame(body)
+    // }
 
+    // function saveGame(body){
+    //     fetch(`${URL}/games`, {
+    //         method: 'POST',
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify(body)
+    //     })
+    // }
 
 
 //calculate score
