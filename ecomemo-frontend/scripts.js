@@ -9,12 +9,12 @@ window.addEventListener('DOMContentLoaded', e => {
     const startButton = document.querySelector("#start")
     const stopButton = document.querySelector("#stop")
     const saveModal = document.querySelector("#save-game-modal")
+    const savedGameInfo = document.querySelector("#saved-game-info")
     const saveGameForm = document.querySelector("#save-game-form")
     
-    // saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
+    saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
     cards.forEach(card => card.addEventListener('click', flipCard));
     shuffle()
-
 
     let username;
     let pairs = 0;
@@ -37,9 +37,6 @@ window.addEventListener('DOMContentLoaded', e => {
         } else {
             alert("Please enter a username")
         }
-        toggleLogOut()
-        toggleDisable(startButton)
-        signedIn = true;
         
 
     })
@@ -53,7 +50,11 @@ window.addEventListener('DOMContentLoaded', e => {
             body: JSON.stringify(body)
           })
           .then(res => res.json())
-          .then(data => console.log(data))
+          .then(data => {
+            toggleLogOut()
+            toggleDisable(startButton)
+            signedIn = true;
+        })
     }
     
 
@@ -105,6 +106,7 @@ window.addEventListener('DOMContentLoaded', e => {
         clearInterval(timer)
         let timerText = gameClock.innerHTML;
         officialSeconds = calculateSeconds() //working, gives total seconds
+        console.log(officialSeconds)
         const div = document.querySelector(".final-time")
         const h5 = document.createElement('h5');
         h5.textContent = `Your Final Time: ${timerText}`
@@ -113,23 +115,46 @@ window.addEventListener('DOMContentLoaded', e => {
 
     }
 
-    // function handleSubmission(e) {
-    //     e.preventDefault()
-    //     let comment = e.target.comment.value 
-    //     const body = {username: username, "totaltime": officialSeconds, "comment": comment}
-    //     saveGame(body)
-    // }
+    function handleSubmission(e) {
+        e.preventDefault()
+        let comment = e.target.comment.value 
+        const body = {username: username, "totaltime": officialSeconds, "comment": comment}
+        saveGame(body)
+    }
 
-    // function saveGame(body){
-    //     fetch(`${URL}/games`, {
-    //         method: 'POST',
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify(body)
-    //     })
-    // }
+    function saveGame(body){
+        fetch(`${URL}/games`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        })
+        .then(resp => resp.json())
+        .then(data => showSaved(data))
+    }
+
+    function showSaved(data) {
+        console.log(data)
+        savedGameInfo.innerHTML = "";
+        savedGameInfo.innerHTML = `<h4 class="game-saved">GAME <br> SAVED</h4>
+            <div class="game-card">
+                <div class="ui segments">
+                    <div class="ui segment"><h6>User</h6></div>
+                    <div class="ui secondary segment"><p>${username}:</p></div>
+                </div>
+                <div class="ui segments">
+                    <div class="ui segment"><h6>Time</h6></div>
+                    <div class="ui secondary segment"><p>${gameClock.innerHTML}:</p></div>
+                </div>
+                <div class="ui segments">
+                    <div class="ui segment"><h6>Comment:</h6></div>
+                    <div class="ui secondary segment"><p>${data.comment}</p></div>
+                </div>
+            </div>
+        `
+    }
 
 
-//calculate score
+//calculate time in seconds
     function calculateSeconds() {
         let timeText = gameClock.innerHTML;
         let timeArray = timeText.split(":");
@@ -198,12 +223,12 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
     function disableCards() {
-        pairs++
         firstCard.removeEventListener('click', flipCard);
         secondCard.removeEventListener('click', flipCard);
+        pairs++
 
         resetBoard();
-        if (pairs >= 0) {
+        if (pairs == 1) {
             toggleDisable(stopButton); //allow stop when all cards are flipped
         }
     }

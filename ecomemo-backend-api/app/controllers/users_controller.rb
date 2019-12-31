@@ -7,7 +7,10 @@ class UsersController < ApplicationController
     end
 
     def create 
-        user = User.find_or_create_by(username: params[:username])
+        user = User.find_by(username: params[:username])
+        if (!user)
+            user = User.create(username: params[:username])
+        end
         render json: user
     end
 
