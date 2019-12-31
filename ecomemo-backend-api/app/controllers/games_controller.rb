@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
 
-    def show
+    def index
         topGames = Game.top_ten
         render json: topGames
     end

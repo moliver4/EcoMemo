@@ -9,37 +9,96 @@ window.addEventListener('DOMContentLoaded', e => {
     const startButton = document.querySelector("#start")
     const stopButton = document.querySelector("#stop")
     const saveModal = document.querySelector("#save-game-modal")
+    const leaderBoardButton = document.querySelector("#leaderboard")
+    const leaderBoardModal = document.querySelector("#leaderboard-modal")
+    const leaderBoardContent = document.querySelector("#leaderboard-content")
     const myGamesButton = document.querySelector("#my-games")
+    const myGamesModal = document.querySelector("#games-modal")
+    const myGamesContent = document.querySelector("#games-content")
     const savedGameInfo = document.querySelector("#saved-game-info")
     const saveGameForm = document.querySelector("#save-game-form")
+
+
     
     saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
     cards.forEach(card => card.addEventListener('click', flipCard));
     shuffle()
+    startButton.addEventListener('click', startGame)
+    stopButton.addEventListener('click', stopGame)
+    logout.addEventListener('click', handleLogout)
+    leaderBoardButton.addEventListener('click', handleLeaderBoard)
+    myGamesButton.addEventListener('click', handleMyGames)
 
     let username;
     let pairs = 0;
     let clockCounter = 0;
-    let signedIn = false;
     let timer;
     let hasFlippedCard = false;
     let officialSeconds = 0;
 
-    let lockBoard = true; //board is locked until login
+    let lockBoard = true; //board is locked until login/startgame
     let firstCard, secondCard;
+
+
+//leaderboard stuff      leaderBoardContent
+
+    function handleLeaderBoard() {
+        leaderBoardContent.innerHTML = ""
+        fetch(`${URL}/games/`)
+        .then(resp => resp.json())
+        .then(games => showGames(games))
+        .then(showLeaderBoard)
+       
+    }
+
+    function showGames(games) {
+        games.forEach(game=> addGame(game))
+        
+    }
+    function addGame(game) {
+        const div = document.createElement('div')
+        div.id = game.id;
+        div.className = "game-card";
+        const h6 = document.createElement('h6')
+        h6.textContent = `${game.user_id}    Comment: ${game.comment}    Total Time: ${calculateTime(game.totaltime)}`
+        div.appendChild(h6)
+        leaderBoardContent.appendChild(div)
+    }
+
+    function showLeaderBoard() {
+        console.log("I MADE IT")
+        displayModal(leaderBoardModal)
+
+    }
+
+   
+
+//user games stuff           myGamesContent
+    function handleMyGames() {
+
+    }
+
+    function getMyGames(){
+
+    }
+
+    
+    function showMyGames() {
+        displayModal(myGamesModal)
+
+    }
+
 
 //login stuff
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault()
-        username = e.target.username.value
-        let body = {username: username}
-        if (username){
+        let entry = e.target.username.value
+        let body = {username: entry}
+        if (entry){
             handleSignIn(body)
         } else {
             alert("Please enter a username")
         }
-        
-
     })
 
     function handleSignIn(body) {
@@ -54,22 +113,54 @@ window.addEventListener('DOMContentLoaded', e => {
           .then(data => {
             //remove this later!!
             console.log(data);
+            username = data.username
             toggleLogOut();
             toggleDisable(startButton);
-            signedIn = true;
-            loginForm.style.display = "none";
+            toggleLogin();
             toggleDisable(myGamesButton);
         })
     }
-    
+
+    function toggleLogin() {
+        if (loginForm.style.display === "none") {
+            loginForm.style.display = "block";
+            loginForm.username.value ="";
+        } else {
+            loginForm.style.display = "none";
+        }
+    }
+
+// logout stuff
+    function handleLogout() {
+        toggleLogin();
+        resetInfo();
+    }
 
     function toggleLogOut() {
-        if (logout.style.display === "none") {
+        if (logout.style.display == "none") {
             logout.style.display = "block";
         } else {
             logout.style.display = "none";
         }
     }
+
+    function resetInfo() {
+        pairs = 0;
+        officialSeconds = 0;
+        username = null;
+        clockCounter = 0;
+        gameClock.innerHTML = "00:00";
+        resetBoard();
+        shuffle();
+        lockBoard = true;
+        clearInterval(timer);
+        timer = 0;
+        toggleLogOut();
+        startButton.textContent = "Restart Game";
+        toggleDisable(startButton)
+        toggleDisable(myGamesButton)
+    }
+
 //button control
     function toggleDisable(button) {
         if (button.disabled) {
@@ -88,8 +179,6 @@ window.addEventListener('DOMContentLoaded', e => {
 
 //game
 
-    startButton.addEventListener('click', (e) => startGame())
-    stopButton.addEventListener('click', (e) => stopGame())
 
     function startGame() {
         if (!stopButton.disabled) {
@@ -111,7 +200,6 @@ window.addEventListener('DOMContentLoaded', e => {
         clearInterval(timer)
         let timerText = gameClock.innerHTML;
         officialSeconds = calculateSeconds() //working, gives total seconds
-        console.log(officialSeconds)
         const div = document.querySelector(".final-time")
         const h5 = document.createElement('h5');
         h5.textContent = `Your Final Time: ${timerText}`
@@ -165,6 +253,15 @@ window.addEventListener('DOMContentLoaded', e => {
         let timeArray = timeText.split(":");
         let secondsCount = (parseInt(timeArray[0])*60) + parseInt(timeArray[1]);
         return secondsCount;
+    }
+
+    function calculateTime(sec) {
+        var minutes = Math.floor((sec) / 60); 
+        var seconds = sec - (minutes * 60);
+  
+        if (minutes < 10) {minutes = "0"+ minutes;}
+        if (seconds < 10) {seconds = "0"+ seconds;}
+        return minutes + ':' + seconds;
     }
 
 //clock stuff

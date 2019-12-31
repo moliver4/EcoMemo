@@ -159,32 +159,48 @@
                 <div class="right-container-item" id="login-logout">
                     <div class="ui input" id="login-form-div" style="display: block">
                         <form autocomplete="off" id="login-form" class="" action="index.html" method="post">
-                            <h3>Login to Play:</h3>
+                            <h3>Login or Enter New Username to Play:</h3>
+                            <br> 
                             <input id="login-field" type="text" name="username" placeholder="username">
                             <br><br>
-                            <input type="submit">
+                            <input type="submit" value="Login">
                             <br><br>
                         </form>
                     </div>
-
-                    <button id="logout" style="display: none">Log Out</button>
-
+    
                 </div>
                     
-                
-                
+                <div class="right-container-item">
+                    <button id="logout" style="display: none"> Log Out </button>
+                </div>
+                    
 
-                <div class="right-container-item" id="leaderboard-div">
+                <div class="right-container-item">
                     <button id="leaderboard">LeaderBoard</button>
                 </div>
 
-                <div class="right-container-item" id="games-div">
+                <div class="right-container-item">
                     <button id="my-games" disabled="true">My Games</button>
+                </div>
+
+                <div class="modal" id="leaderboard-modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <div id="leaderboard-content"></div>   
+                    </div>   
+                </div>
+
+                <div class="modal" id="games-modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <div id="games-content"></div>    
+                    </div> 
                 </div>
 
             </div>
         
         </div>
+
 
 
         <div id="footer">
