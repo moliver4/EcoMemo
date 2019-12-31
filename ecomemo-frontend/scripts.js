@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', e => {
     const startButton = document.querySelector("#start")
     const stopButton = document.querySelector("#stop")
     const saveModal = document.querySelector("#save-game-modal")
+    const myGamesButton = document.querySelector("#my-games")
     const savedGameInfo = document.querySelector("#saved-game-info")
     const saveGameForm = document.querySelector("#save-game-form")
     
@@ -51,9 +52,13 @@ window.addEventListener('DOMContentLoaded', e => {
           })
           .then(res => res.json())
           .then(data => {
-            toggleLogOut()
-            toggleDisable(startButton)
+            //remove this later!!
+            console.log(data);
+            toggleLogOut();
+            toggleDisable(startButton);
             signedIn = true;
+            loginForm.style.display = "none";
+            toggleDisable(myGamesButton);
         })
     }
     
