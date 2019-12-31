@@ -17,10 +17,11 @@ window.addEventListener('DOMContentLoaded', e => {
     const myGamesContent = document.querySelector("#games-content")
     const savedGameInfo = document.querySelector("#saved-game-info")
     const saveGameForm = document.querySelector("#save-game-form")
+    const closeSaveModalX = document.querySelector("#close-save-game")
+    const closeLeaderboardX=document.querySelector("#close-leaderboard")
+    const closeGamesX = document.querySelector("#close-games")
 
 
-    
-    saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
     cards.forEach(card => card.addEventListener('click', flipCard));
     shuffle()
     startButton.addEventListener('click', startGame)
@@ -28,6 +29,11 @@ window.addEventListener('DOMContentLoaded', e => {
     logout.addEventListener('click', handleLogout)
     leaderBoardButton.addEventListener('click', handleLeaderBoard)
     myGamesButton.addEventListener('click', handleMyGames)
+    closeGamesX.addEventListener('click', (e)=> hideModal(myGamesModal))
+    closeLeaderboardX.addEventListener('click', (e) => hideModal(leaderBoardModal))
+    closeSaveModalX.addEventListener('click', (e) => hideModal(saveModal)) 
+    saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
+
 
     let username;
     let pairs = 0;
@@ -56,11 +62,12 @@ window.addEventListener('DOMContentLoaded', e => {
         
     }
     function addGame(game) {
+    
         const div = document.createElement('div')
         div.id = game.id;
         div.className = "game-card";
         const h6 = document.createElement('h6')
-        h6.textContent = `${game.user_id}    Comment: ${game.comment}    Total Time: ${calculateTime(game.totaltime)}`
+        h6.innerHTML = `<pre>User: ${game.user.username}    ****    Comment: ${game.comment}    ****   Total Time: ${calculateTime(game.totaltime)}</pre>`
         div.appendChild(h6)
         leaderBoardContent.appendChild(div)
     }
@@ -282,10 +289,10 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
 //modal functionality
+
     function displayModal(modal) {
         modal.style.display = "block";
-        const closeSaveModal = document.querySelector("#close-save-game")
-        closeSaveModal.addEventListener('click', (e) => hideModal(saveModal))
+        
     }
 
     function hideModal(modal) {

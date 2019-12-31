@@ -2,7 +2,9 @@ class GamesController < ApplicationController
 
     def index
         topGames = Game.top_ten
-        render json: topGames
+        render json: topGames.to_json(:include => {
+            :user => {:only => [:username, :id]}
+          }, :except => [:updated_at])
     end
 
 
