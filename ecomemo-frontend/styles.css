@@ -41,6 +41,14 @@
   }
 
   
+  .game-card {
+    border: 5px;
+    margin: 2px;
+    padding: 10px 0px 10px 50px;
+    background:rgb(13, 112, 66);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 
   .memory-card {
     width: calc(20% - 10px);

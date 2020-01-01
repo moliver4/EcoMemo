@@ -1,4 +1,5 @@
-const URL = "http://localhost:3000"
+const GAMESURL = "http://localhost:3000/games"
+const USERSURL = "http://localhost:3000/users"
 
 window.addEventListener('DOMContentLoaded', e => {
 
@@ -36,12 +37,12 @@ window.addEventListener('DOMContentLoaded', e => {
 
 
     let username;
+    let userID;
     let pairs = 0;
     let clockCounter = 0;
     let timer;
     let hasFlippedCard = false;
     let officialSeconds = 0;
-
     let lockBoard = true; //board is locked until login/startgame
     let firstCard, secondCard;
 
@@ -50,7 +51,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function handleLeaderBoard() {
         leaderBoardContent.innerHTML = ""
-        fetch(`${URL}/games/`)
+        fetch(`${GAMESURL}`)
         .then(resp => resp.json())
         .then(games => showGames(games))
         .then(showLeaderBoard)
@@ -58,18 +59,39 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
     function showGames(games) {
-        games.forEach(game=> addGame(game))
+        if (games.length == 0) {
+            console.log(" sdhere")
+            emptyMessage(myGamesContent)
+        }
+        games.forEach(game=> addGame(game, leaderBoardContent))
         
     }
-    function addGame(game) {
+    
+    function addGame(game, node) {
     
         const div = document.createElement('div')
-        div.id = game.id;
+        div.id = `game${game.id}`;
         div.className = "game-card";
-        const h6 = document.createElement('h6')
-        h6.innerHTML = `<pre>User: ${game.user.username}    ****    Comment: ${game.comment}    ****   Total Time: ${calculateTime(game.totaltime)}</pre>`
+        const h51 = document.createElement('h5')
+        h51.innerHTML = `User: ${game.user.username}`
+        const h52 = document.createElement('h5')
+        h52.innerHTML =`Total Time: ${calculateTime(game.totaltime)}` 
+        const h6 = document.createElement('h5')
+        h6.innerHTML =` Comment: ${game.comment}`
+        
+        div.appendChild(h51)
+        div.appendChild(h52)
         div.appendChild(h6)
-        leaderBoardContent.appendChild(div)
+        if (game.user.username === username) {
+            const btn = document.createElement('button')
+            btn.className = "delete-game"
+            btn.textContent = "Delete My Game"
+            btn.addEventListener('click', () => deleteGame(game.id))
+            div.appendChild(btn)
+        }
+    
+        node.appendChild(div)
+
     }
 
     function showLeaderBoard() {
@@ -78,21 +100,55 @@ window.addEventListener('DOMContentLoaded', e => {
 
     }
 
-   
+    function deleteGame(id) {
+        fetch(`${GAMESURL}/${id}`, {
+            method: 'DELETE',
+            headers: { 
+                "Access-Control-Allow-Origin": `*`,
+                "Content-Type": "application/json", 
+                "Accept": "application/json"}
+        })
+        .then(() => {
+            const deleted = document.querySelector(`#game${id}`)
+            const parent = deleted.parentNode
+            deleted.parentNode.removeChild(deleted)
+            if (!parent.hasChildNodes()){
+                emptyMessage(parent)
+            }
+        })
+    }
+
+    function emptyMessage(node) {
+        const div = document.createElement("div");
+        div.className = "empty-card";
+        const h5 = document.createElement("h5")
+        h5.textContent = "Oh No!! No Games to Display...Maybe You Should Play Some... "
+        div.appendChild(h5)
+
+        node.appendChild(div)
+    }
+
 
 //user games stuff           myGamesContent
     function handleMyGames() {
-
+        myGamesContent.innerHTML = ""
+        fetch(`${USERSURL}/${userID}`)
+        .then(resp => resp.json())
+        .then(games => addMyGames(games))
+        .then(showMyGames)
     }
 
-    function getMyGames(){
-
+    function addMyGames(games) {
+        if (games.length == 0) {
+            console.log(" sdhere")
+            emptyMessage(myGamesContent)
+        }
+        games.forEach(game=> addGame(game, myGamesContent))
     }
-
     
     function showMyGames() {
+        
         displayModal(myGamesModal)
-
     }
 
 
@@ -109,7 +165,7 @@ window.addEventListener('DOMContentLoaded', e => {
     })
 
     function handleSignIn(body) {
-        fetch(`${URL}/users/`, {
+        fetch(`${USERSURL}`, {
             method: 'POST',
             headers: { 
                 "Content-Type": "application/json", 
@@ -120,10 +176,11 @@ window.addEventListener('DOMContentLoaded', e => {
           .then(data => {
             //remove this later!!
             console.log(data);
-            username = data.username
+            toggleLogin();
+            username = data.username;
+            userID = data.id;
             toggleLogOut();
             toggleDisable(startButton);
-            toggleLogin();
             toggleDisable(myGamesButton);
         })
     }
@@ -155,6 +212,7 @@ window.addEventListener('DOMContentLoaded', e => {
         pairs = 0;
         officialSeconds = 0;
         username = null;
+        userID = null;
         clockCounter = 0;
         gameClock.innerHTML = "00:00";
         resetBoard();
@@ -163,7 +221,7 @@ window.addEventListener('DOMContentLoaded', e => {
         clearInterval(timer);
         timer = 0;
         toggleLogOut();
-        startButton.textContent = "Restart Game";
+        startButton.textContent = "Start Game";
         toggleDisable(startButton)
         toggleDisable(myGamesButton)
     }
@@ -223,7 +281,7 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
     function saveGame(body){
-        fetch(`${URL}/games`, {
+        fetch(`${GAMESURL}`, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
@@ -238,12 +296,12 @@ window.addEventListener('DOMContentLoaded', e => {
         savedGameInfo.innerHTML = `<h4 class="game-saved">GAME <br> SAVED</h4>
             <div class="game-card">
                 <div class="ui segments">
-                    <div class="ui segment"><h6>User</h6></div>
-                    <div class="ui secondary segment"><p>${username}:</p></div>
+                    <div class="ui segment"><h6>User:</h6></div>
+                    <div class="ui secondary segment"><p>${username}</p></div>
                 </div>
                 <div class="ui segments">
-                    <div class="ui segment"><h6>Time</h6></div>
-                    <div class="ui secondary segment"><p>${gameClock.innerHTML}:</p></div>
+                    <div class="ui segment"><h6>Time:</h6></div>
+                    <div class="ui secondary segment"><p>${gameClock.innerHTML}</p></div>
                 </div>
                 <div class="ui segments">
                     <div class="ui segment"><h6>Comment:</h6></div>
@@ -254,14 +312,14 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
 
-//calculate time in seconds
+//calculate time to seconds
     function calculateSeconds() {
         let timeText = gameClock.innerHTML;
         let timeArray = timeText.split(":");
         let secondsCount = (parseInt(timeArray[0])*60) + parseInt(timeArray[1]);
         return secondsCount;
     }
-
+//calculate seconds to time
     function calculateTime(sec) {
         var minutes = Math.floor((sec) / 60); 
         var seconds = sec - (minutes * 60);
@@ -357,6 +415,7 @@ window.addEventListener('DOMContentLoaded', e => {
         [hasFlippedCard, lockBoard] = [false, false];
         [firstCard, secondCard] = [null, null];
     }
+
     function shuffle() {
         cards.forEach(card => {
             card.classList.remove('flip')
