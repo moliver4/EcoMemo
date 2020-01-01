@@ -17,14 +17,13 @@ window.addEventListener('DOMContentLoaded', e => {
     const myGamesModal = document.querySelector("#games-modal")
     const myGamesContent = document.querySelector("#games-content")
     const savedGameInfo = document.querySelector("#saved-game-info")
-    const saveGameForm = document.querySelector("#save-game-form")
+   
     const closeSaveModalX = document.querySelector("#close-save-game")
     const closeLeaderboardX=document.querySelector("#close-leaderboard")
     const closeGamesX = document.querySelector("#close-games")
 
 
     cards.forEach(card => card.addEventListener('click', flipCard));
-    shuffle()
     startButton.addEventListener('click', startGame)
     stopButton.addEventListener('click', stopGame)
     logout.addEventListener('click', handleLogout)
@@ -33,10 +32,10 @@ window.addEventListener('DOMContentLoaded', e => {
     closeGamesX.addEventListener('click', (e)=> hideModal(myGamesModal))
     closeLeaderboardX.addEventListener('click', (e) => hideModal(leaderBoardModal))
     closeSaveModalX.addEventListener('click', (e) => hideModal(saveModal)) 
-    saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
+  
 
 
-    let username;
+    let usernameName;
     let userID;
     let pairs = 0;
     let clockCounter = 0;
@@ -47,109 +46,6 @@ window.addEventListener('DOMContentLoaded', e => {
     let firstCard, secondCard;
 
 
-//leaderboard stuff      leaderBoardContent
-
-    function handleLeaderBoard() {
-        leaderBoardContent.innerHTML = ""
-        fetch(`${GAMESURL}`)
-        .then(resp => resp.json())
-        .then(games => showGames(games))
-        .then(showLeaderBoard)
-       
-    }
-
-    function showGames(games) {
-        if (games.length == 0) {
-            console.log(" sdhere")
-            emptyMessage(myGamesContent)
-        }
-        games.forEach(game=> addGame(game, leaderBoardContent))
-        
-    }
-    
-    function addGame(game, node) {
-    
-        const div = document.createElement('div')
-        div.id = `game${game.id}`;
-        div.className = "game-card";
-        const h51 = document.createElement('h5')
-        h51.innerHTML = `User: ${game.user.username}`
-        const h52 = document.createElement('h5')
-        h52.innerHTML =`Total Time: ${calculateTime(game.totaltime)}` 
-        const h6 = document.createElement('h5')
-        h6.innerHTML =` Comment: ${game.comment}`
-        
-        div.appendChild(h51)
-        div.appendChild(h52)
-        div.appendChild(h6)
-        if (game.user.username === username) {
-            const btn = document.createElement('button')
-            btn.className = "delete-game"
-            btn.textContent = "Delete My Game"
-            btn.addEventListener('click', () => deleteGame(game.id))
-            div.appendChild(btn)
-        }
-    
-        node.appendChild(div)
-
-    }
-
-    function showLeaderBoard() {
-        console.log("I MADE IT")
-        displayModal(leaderBoardModal)
-
-    }
-
-    function deleteGame(id) {
-        fetch(`${GAMESURL}/${id}`, {
-            method: 'DELETE',
-            headers: { 
-                "Access-Control-Allow-Origin": `*`,
-                "Content-Type": "application/json", 
-                "Accept": "application/json"}
-        })
-        .then(() => {
-            const deleted = document.querySelector(`#game${id}`)
-            const parent = deleted.parentNode
-            deleted.parentNode.removeChild(deleted)
-            if (!parent.hasChildNodes()){
-                emptyMessage(parent)
-            }
-        })
-    }
-
-    function emptyMessage(node) {
-        const div = document.createElement("div");
-        div.className = "empty-card";
-        const h5 = document.createElement("h5")
-        h5.textContent = "Oh No!! No Games to Display...Maybe You Should Play Some... "
-        div.appendChild(h5)
-
-        node.appendChild(div)
-    }
-
-
-//user games stuff           myGamesContent
-    function handleMyGames() {
-        myGamesContent.innerHTML = ""
-        fetch(`${USERSURL}/${userID}`)
-        .then(resp => resp.json())
-        .then(games => addMyGames(games))
-        .then(showMyGames)
-    }
-
-    function addMyGames(games) {
-        if (games.length == 0) {
-            console.log(" sdhere")
-            emptyMessage(myGamesContent)
-        }
-        games.forEach(game=> addGame(game, myGamesContent))
-    }
-    
-    function showMyGames() {
-        
-        displayModal(myGamesModal)
-    }
 
 
 //login stuff
@@ -177,7 +73,7 @@ window.addEventListener('DOMContentLoaded', e => {
             //remove this later!!
             console.log(data);
             toggleLogin();
-            username = data.username;
+            usernameName = data.username;
             userID = data.id;
             toggleLogOut();
             toggleDisable(startButton);
@@ -211,7 +107,7 @@ window.addEventListener('DOMContentLoaded', e => {
     function resetInfo() {
         pairs = 0;
         officialSeconds = 0;
-        username = null;
+        usernameName = null;
         userID = null;
         clockCounter = 0;
         gameClock.innerHTML = "00:00";
@@ -251,24 +147,35 @@ window.addEventListener('DOMContentLoaded', e => {
         }
         officialSeconds = 0;
         restartText();
-        lockBoard = false;
         pairs = 0;
-        shuffle()
+        resetBoard();
+        shuffle();
         clockCounter = 0;
         gameClock.innerText = "00:00";
         clearInterval(timer)
         timer = setInterval(gameClockFunction, 1000)
-        
     }
 
     function stopGame() {
         clearInterval(timer)
         let timerText = gameClock.innerHTML;
         officialSeconds = calculateSeconds() //working, gives total seconds
-        const div = document.querySelector(".final-time")
-        const h5 = document.createElement('h5');
-        h5.textContent = `Your Final Time: ${timerText}`
-        div.appendChild(h5)
+        savedGameInfo.innerHTML = "";
+        savedGameInfo.innerHTML = 
+        `<div class="final-time"> 
+            <h4>Yay! You Did It!</h4> 
+        </div>
+        <div class="ui input" id="save-game-form-div" >
+            <form autocomplete="off" id="save-game-form" method="post">
+                <h3>Enter a Comment Before Saving:</h3>
+                <input id="comment-field" type="text" name="comment" placeholder="Comment">
+                <br><br>
+                <input type="submit" value="Save My Game!">
+                <br><br>
+            </form>
+        </div>`
+        const saveGameForm = document.querySelector("#save-game-form")
+        saveGameForm.addEventListener('submit', (e) => handleSubmission(e))
         displayModal(saveModal)
 
     }
@@ -276,7 +183,7 @@ window.addEventListener('DOMContentLoaded', e => {
     function handleSubmission(e) {
         e.preventDefault()
         let comment = e.target.comment.value 
-        const body = {username: username, "totaltime": officialSeconds, "comment": comment}
+        const body = {username: usernameName, "totaltime": officialSeconds, "comment": comment}
         saveGame(body)
     }
 
@@ -297,7 +204,7 @@ window.addEventListener('DOMContentLoaded', e => {
             <div class="game-card">
                 <div class="ui segments">
                     <div class="ui segment"><h6>User:</h6></div>
-                    <div class="ui secondary segment"><p>${username}</p></div>
+                    <div class="ui secondary segment"><p>${usernameName}</p></div>
                 </div>
                 <div class="ui segments">
                     <div class="ui segment"><h6>Time:</h6></div>
@@ -357,17 +264,116 @@ window.addEventListener('DOMContentLoaded', e => {
         modal.style.display = "none";
     }
 
+    //leaderboard stuff      leaderBoardContent
+
+    function handleLeaderBoard() {
+        leaderBoardContent.innerHTML = ""
+        fetch(`${GAMESURL}`)
+        .then(resp => resp.json())
+        .then(games => showGames(games))
+        .then(showLeaderBoard)
+       
+    }
+
+    function showGames(games) {
+        if (games.length == 0) {
+            emptyMessage(leaderBoardContent)
+        }
+        games.forEach(game => addGame(game, leaderBoardContent))
+        
+    }
+    
+    function addGame(game, node) {
+
+        const div = document.createElement('div')
+        div.id = `game${game.id}`;
+        div.className = "game-card";
+        const h51 = document.createElement('h5')
+        h51.innerHTML = `User: ${game.user.username}`
+        const h52 = document.createElement('h5')
+        h52.innerHTML =`Total Time: ${calculateTime(game.totaltime)}` 
+        const h6 = document.createElement('h5')
+        h6.innerHTML =` Comment: ${game.comment}`
+        
+        div.appendChild(h51)
+        div.appendChild(h52)
+        div.appendChild(h6)
+        if (game.user.username === usernameName) {
+            const btn = document.createElement('button')
+            btn.className = "delete-game"
+            btn.textContent = "Delete My Game"
+            btn.addEventListener('click', () => deleteGame(game.id))
+            div.appendChild(btn)
+        }
+    
+        node.appendChild(div)
+
+    }
+
+    function showLeaderBoard() {
+
+        displayModal(leaderBoardModal)
+
+    }
+
+    function deleteGame(id) {
+        fetch(`${GAMESURL}/${id}`, {
+            method: 'DELETE',
+            headers: { 
+                "Access-Control-Allow-Origin": `*`,
+                "Content-Type": "application/json", 
+                "Accept": "application/json"}
+        })
+        .then(() => {
+            const deleted = document.querySelector(`#game${id}`)
+            const parent = deleted.parentNode
+            deleted.parentNode.removeChild(deleted)
+            if (!parent.hasChildNodes()){
+                emptyMessage(parent)
+            }
+        })
+    }
+
+    function emptyMessage(node) {
+        const div = document.createElement("div");
+        div.className = "empty-card";
+        const h5 = document.createElement("h5")
+        h5.textContent = "Oh No!! No Games to Display...Maybe You Should Play Some... "
+        div.appendChild(h5)
+
+        node.appendChild(div)
+    }
+
+
+//user games stuff           myGamesContent
+    function handleMyGames() {
+        myGamesContent.innerHTML = ""
+        fetch(`${USERSURL}/${userID}`)
+        .then(resp => resp.json())
+        .then(games => addMyGames(games))
+        .then(showMyGames)
+    }
+
+    function addMyGames(games) {
+        if (games.length == 0) {
+            console.log(" sdhere")
+            emptyMessage(myGamesContent)
+        }
+        games.forEach(game=> addGame(game, myGamesContent))
+    }
+    
+    function showMyGames() {
+        displayModal(myGamesModal)
+    }
+
+
 //card functionality
     
-    function shuffle() {
-        cards.forEach(card => {
-            let randomPos = Math.floor(Math.random() * 12);
-            card.style.order = randomPos;
-        });
-    };
-
     function flipCard() {
-        if (lockBoard) return;
+        if (lockBoard) { 
+            console.log ("locked?" ) 
+            return;
+        }
         if (this === firstCard) return;
 
         this.classList.add('flip');
@@ -419,8 +425,9 @@ window.addEventListener('DOMContentLoaded', e => {
     function shuffle() {
         cards.forEach(card => {
             card.classList.remove('flip')
-            let randomPos = Math.floor(Math.random() * 12);
-            card.style.order = randomPos;
+            let random = Math.floor(Math.random() * 12);
+            card.style.order = random;
+            card.addEventListener('click', flipCard);
         });
     };
 

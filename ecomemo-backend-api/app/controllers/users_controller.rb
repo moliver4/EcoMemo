@@ -17,6 +17,15 @@ class UsersController < ApplicationController
         render json: user
     end
 
+    def destroy
+        user = User.find_by(id: params[:id])
+        games = user.games    
+        user.destroy
+       
+        games.each {|game| game.destroy}
+        render json: user
+    end
+
 
     private
 
