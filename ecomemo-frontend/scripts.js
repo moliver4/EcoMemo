@@ -17,8 +17,9 @@ window.addEventListener('DOMContentLoaded', e => {
     const myGamesModal = document.querySelector("#games-modal")
     const myGamesContent = document.querySelector("#games-content")
     const savedGameInfo = document.querySelector("#saved-game-info")
-    const deleteModal = document.querySelector("#delete-modal")
+    const deleteAccountModal = document.querySelector("#delete-modal")
     const deleteAccountButton = document.querySelector("#delete-account")
+    const deleteAccountContent = document.querySelector("#delete-account-content")
 
     const closeDeleteModalX = document.querySelector("#close-delete-account")
     const closeSaveModalX = document.querySelector("#close-save-game")
@@ -36,8 +37,8 @@ window.addEventListener('DOMContentLoaded', e => {
     closeGamesX.addEventListener('click', ()=> hideModal(myGamesModal))
     closeLeaderboardX.addEventListener('click', () => hideModal(leaderBoardModal))
     closeSaveModalX.addEventListener('click', () => hideModal(saveModal)) 
-    closeDeleteModalX.addEventListener('click', () => hideModal(deleteModal))
-    deleteAccountButton.addEventListener('click', () => console.log("HIIIIII OMG"))
+    closeDeleteModalX.addEventListener('click', () => hideModal(deleteAccountModal))
+    deleteAccountButton.addEventListener('click', confirmDelete)
 
 
     let usernameName;
@@ -57,6 +58,7 @@ window.addEventListener('DOMContentLoaded', e => {
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault()
         let entry = e.target.username.value
+        e.target.reset()
         let body = {username: entry}
         if (entry){
             handleSignIn(body)
@@ -82,20 +84,12 @@ window.addEventListener('DOMContentLoaded', e => {
             userID = data.id;
             toggleVisibility(logout);
             toggleVisibility(deleteAccountButton)
-            // toggleDeleteAccount();
+           
             toggleDisable(startButton);
             toggleDisable(myGamesButton);
         })
     }
 
-    // function toggleLogin() {
-    //     if (loginForm.style.display === "none") {
-    //         loginForm.style.display = "block";
-    //         loginForm.username.value ="";
-    //     } else {
-    //         loginForm.style.display = "none";
-    //     }
-    // }
 
     function toggleVisibility(node){
         if (node.style.display == "none") {
@@ -104,27 +98,15 @@ window.addEventListener('DOMContentLoaded', e => {
             node.style.display = "none"
         }
     }
-    // function toggleDeleteAccount() {
-    //     if (deleteAccountButton.style.display == "none") {
-    //         deleteAccountButton.style.display = "block";
-    //     } else {
-    //         deleteAccountButton.style.display = "none";
-    //     }
-    // }
+
 // logout stuff
     function handleLogout() {
         toggleVisibility(loginForm)
-        // toggleDeleteAccount();
+        toggleVisibility(logout)
+        toggleVisibility(deleteAccountButton)
         resetInfo();
     }
 
-    // function toggleLogOut() {
-    //     if (logout.style.display == "none") {
-    //         logout.style.display = "block";
-    //     } else {
-    //         logout.style.display = "none";
-    //     }
-    // }
 
     function resetInfo() {
         pairs = 0;
@@ -138,7 +120,6 @@ window.addEventListener('DOMContentLoaded', e => {
         lockBoard = true;
         clearInterval(timer);
         timer = 0;
-        toggleVisibility(logout)
         startButton.textContent = "Start Game";
         toggleDisable(startButton)
         toggleDisable(myGamesButton)
@@ -262,10 +243,10 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function gameClockFunction(){
         ++clockCounter
-        gameClock.innerText = clockCounter.toString(10).toMMSS()
+        gameClock.innerText = clockCounter.toString(10).toMinSec()
     }
 
-    String.prototype.toMMSS = function () {
+    String.prototype.toMinSec = function () {
         var totalSeconds = parseInt(this, 10);
         var minutes = Math.floor((totalSeconds) / 60); 
         var seconds = totalSeconds - (minutes * 60);
@@ -285,8 +266,49 @@ window.addEventListener('DOMContentLoaded', e => {
     function hideModal(modal) {
         modal.style.display = "none";
     }
+// account deletion
+    function confirmDelete() {
+        deleteAccountContent.innerHTML = ""
+        
+        const h3 = document.createElement("h3");
+        h3.textContent = `Are you sure you want to delete your Account, ${usernameName}?`
+        const h4 = document.createElement("h4");
+        h4.textContent = "All your games will be deleted and you will be logged out."
+        const btn = document.createElement("button")
+        btn.textContent = "Yes, I want to be Deleted Forever"
+        btn.addEventListener('click', deleteUser)
+        deleteAccountContent.appendChild(h3)
+        deleteAccountContent.appendChild(h4)
+        deleteAccountContent.appendChild(btn)
+        displayModal(deleteAccountModal)
+    }
 
-    //leaderboard stuff      leaderBoardContent
+
+    function deleteUser() {
+        fetch(`${USERSURL}/${userID}`, {
+            method: 'DELETE',
+            headers: { 
+                "Access-Control-Allow-Origin": `*`,
+                "Content-Type": "application/json", 
+                "Accept": "application/json"}
+        })
+        .then(confirmDeletion)
+        .then(setTimeout(function(){deleteAccountModal.style.display = "none"}, 3000))
+        .then(setTimeout(handleLogout, 3000))
+        
+    }
+
+
+    function confirmDeletion(){
+        deleteAccountContent.innerHTML = ""
+        const h3 = document.createElement("h3");
+        h3.textContent = `Fine, ${usernameName}. Your Account has been deleted and you will be logged out now...`
+        deleteAccountContent.appendChild(h3)
+        displayModal(deleteAccountModal)
+   
+    }
+
+//leaderboard stuff      leaderBoardContent
 
     function handleLeaderBoard() {
         leaderBoardContent.innerHTML = ""
