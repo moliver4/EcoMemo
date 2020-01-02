@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
     const gameClock = document.querySelector("#game-clock")
     const loginForm = document.querySelector("#login-form")
+    const loginFormBox = document.querySelector("#login-form-div")
     const cards = document.querySelectorAll('.memory-card');
     const logout = document.querySelector("#logout")
     const startButton = document.querySelector("#start")
@@ -84,7 +85,7 @@ window.addEventListener('DOMContentLoaded', e => {
             userID = data.id;
             toggleVisibility(logout);
             toggleVisibility(deleteAccountButton)
-           
+            toggleVisibility(loginFormBox)
             toggleDisable(startButton);
             toggleDisable(myGamesButton);
         })
@@ -93,7 +94,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function toggleVisibility(node){
         if (node.style.display == "none") {
-            node.style.display = "block"
+            node.style.display = "inline"
         } else {
             node.style.display = "none"
         }
@@ -101,7 +102,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
 // logout stuff
     function handleLogout() {
-        toggleVisibility(loginForm)
+        toggleVisibility(loginFormBox)
         toggleVisibility(logout)
         toggleVisibility(deleteAccountButton)
         resetInfo();
@@ -173,7 +174,7 @@ window.addEventListener('DOMContentLoaded', e => {
                 <h3>Enter a Comment Before Saving:</h3>
                 <input id="comment-field" type="text" name="comment" placeholder="Comment">
                 <br><br>
-                <input type="submit" value="Save My Game!">
+                <input class="form-button" type="submit" value="Save My Game!">
                 <br><br>
             </form>
         </div>`
@@ -202,6 +203,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function showSaved(data) {
         console.log(data)
+        toggleDisable(stopButton)
         savedGameInfo.innerHTML = "";
         savedGameInfo.innerHTML = `<h4 class="game-saved">GAME <br> SAVED</h4>
             <div class="game-card">
@@ -414,8 +416,12 @@ window.addEventListener('DOMContentLoaded', e => {
 //card functionality
     
     function flipCard() {
+        if(!usernameName) {
+            alert("Log In to Play!")
+            return;
+        }
         if (lockBoard) { 
-            console.log ("locked?" ) 
+            alert("Press Start To Play!")
             return;
         }
         if (this === firstCard) return;
