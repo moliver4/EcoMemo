@@ -17,7 +17,10 @@ window.addEventListener('DOMContentLoaded', e => {
     const myGamesModal = document.querySelector("#games-modal")
     const myGamesContent = document.querySelector("#games-content")
     const savedGameInfo = document.querySelector("#saved-game-info")
-   
+    const deleteModal = document.querySelector("#delete-modal")
+    const deleteAccountButton = document.querySelector("#delete-account")
+
+    const closeDeleteModalX = document.querySelector("#close-delete-account")
     const closeSaveModalX = document.querySelector("#close-save-game")
     const closeLeaderboardX=document.querySelector("#close-leaderboard")
     const closeGamesX = document.querySelector("#close-games")
@@ -27,12 +30,14 @@ window.addEventListener('DOMContentLoaded', e => {
     startButton.addEventListener('click', startGame)
     stopButton.addEventListener('click', stopGame)
     logout.addEventListener('click', handleLogout)
+
     leaderBoardButton.addEventListener('click', handleLeaderBoard)
     myGamesButton.addEventListener('click', handleMyGames)
-    closeGamesX.addEventListener('click', (e)=> hideModal(myGamesModal))
-    closeLeaderboardX.addEventListener('click', (e) => hideModal(leaderBoardModal))
-    closeSaveModalX.addEventListener('click', (e) => hideModal(saveModal)) 
-  
+    closeGamesX.addEventListener('click', ()=> hideModal(myGamesModal))
+    closeLeaderboardX.addEventListener('click', () => hideModal(leaderBoardModal))
+    closeSaveModalX.addEventListener('click', () => hideModal(saveModal)) 
+    closeDeleteModalX.addEventListener('click', () => hideModal(deleteModal))
+    deleteAccountButton.addEventListener('click', () => console.log("HIIIIII OMG"))
 
 
     let usernameName;
@@ -72,37 +77,54 @@ window.addEventListener('DOMContentLoaded', e => {
           .then(data => {
             //remove this later!!
             console.log(data);
-            toggleLogin();
+            toggleVisibility(loginForm)
             usernameName = data.username;
             userID = data.id;
-            toggleLogOut();
+            toggleVisibility(logout);
+            toggleVisibility(deleteAccountButton)
+            // toggleDeleteAccount();
             toggleDisable(startButton);
             toggleDisable(myGamesButton);
         })
     }
 
-    function toggleLogin() {
-        if (loginForm.style.display === "none") {
-            loginForm.style.display = "block";
-            loginForm.username.value ="";
+    // function toggleLogin() {
+    //     if (loginForm.style.display === "none") {
+    //         loginForm.style.display = "block";
+    //         loginForm.username.value ="";
+    //     } else {
+    //         loginForm.style.display = "none";
+    //     }
+    // }
+
+    function toggleVisibility(node){
+        if (node.style.display == "none") {
+            node.style.display = "block"
         } else {
-            loginForm.style.display = "none";
+            node.style.display = "none"
         }
     }
-
+    // function toggleDeleteAccount() {
+    //     if (deleteAccountButton.style.display == "none") {
+    //         deleteAccountButton.style.display = "block";
+    //     } else {
+    //         deleteAccountButton.style.display = "none";
+    //     }
+    // }
 // logout stuff
     function handleLogout() {
-        toggleLogin();
+        toggleVisibility(loginForm)
+        // toggleDeleteAccount();
         resetInfo();
     }
 
-    function toggleLogOut() {
-        if (logout.style.display == "none") {
-            logout.style.display = "block";
-        } else {
-            logout.style.display = "none";
-        }
-    }
+    // function toggleLogOut() {
+    //     if (logout.style.display == "none") {
+    //         logout.style.display = "block";
+    //     } else {
+    //         logout.style.display = "none";
+    //     }
+    // }
 
     function resetInfo() {
         pairs = 0;
@@ -116,7 +138,7 @@ window.addEventListener('DOMContentLoaded', e => {
         lockBoard = true;
         clearInterval(timer);
         timer = 0;
-        toggleLogOut();
+        toggleVisibility(logout)
         startButton.textContent = "Start Game";
         toggleDisable(startButton)
         toggleDisable(myGamesButton)
@@ -268,14 +290,16 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function handleLeaderBoard() {
         leaderBoardContent.innerHTML = ""
+        
         fetch(`${GAMESURL}`)
         .then(resp => resp.json())
         .then(games => showGames(games))
-        .then(showLeaderBoard)
+        .then(showLeaderBoard())
        
     }
 
     function showGames(games) {
+        
         if (games.length == 0) {
             emptyMessage(leaderBoardContent)
         }
@@ -293,7 +317,7 @@ window.addEventListener('DOMContentLoaded', e => {
         const h52 = document.createElement('h5')
         h52.innerHTML =`Total Time: ${calculateTime(game.totaltime)}` 
         const h6 = document.createElement('h5')
-        h6.innerHTML =` Comment: ${game.comment}`
+        h6.innerHTML =`Comment: ${game.comment}`
         
         div.appendChild(h51)
         div.appendChild(h52)
@@ -311,9 +335,7 @@ window.addEventListener('DOMContentLoaded', e => {
     }
 
     function showLeaderBoard() {
-
         displayModal(leaderBoardModal)
-
     }
 
     function deleteGame(id) {
