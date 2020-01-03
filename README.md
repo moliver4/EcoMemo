@@ -13,7 +13,8 @@ In the ```Ecomemo-frontend```folder, open ```index.html``` in your browser.
 Login to play!
 
 ## Usage
-//I will put a video here maybe?
+![Website layout. Login](img/ecomemo1.mov)
+![Finishing Game and Saving Game](img/ecomemo2.mov)
 
 
 ## Contributing
