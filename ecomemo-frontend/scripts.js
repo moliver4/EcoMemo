@@ -5,8 +5,8 @@ window.addEventListener('DOMContentLoaded', e => {
 
     const gameClock = document.querySelector("#game-clock")
     const loginForm = document.querySelector("#login-form")
-    const loginFormBox = document.querySelector("#login-form-div")
     const cards = document.querySelectorAll('.memory-card');
+    const game = document.querySelector('.memory-game')
     const logout = document.querySelector("#logout")
     const startButton = document.querySelector("#start")
     const stopButton = document.querySelector("#stop")
@@ -21,6 +21,7 @@ window.addEventListener('DOMContentLoaded', e => {
     const deleteAccountModal = document.querySelector("#delete-modal")
     const deleteAccountButton = document.querySelector("#delete-account")
     const deleteAccountContent = document.querySelector("#delete-account-content")
+    const rulesButton = document.querySelector("#rules")
 
     const closeDeleteModalX = document.querySelector("#close-delete-account")
     const closeSaveModalX = document.querySelector("#close-save-game")
@@ -32,6 +33,7 @@ window.addEventListener('DOMContentLoaded', e => {
     startButton.addEventListener('click', startGame)
     stopButton.addEventListener('click', stopGame)
     logout.addEventListener('click', handleLogout)
+    rulesButton.addEventListener('click', showRules)
 
     leaderBoardButton.addEventListener('click', handleLeaderBoard)
     myGamesButton.addEventListener('click', handleMyGames)
@@ -85,9 +87,10 @@ window.addEventListener('DOMContentLoaded', e => {
             userID = data.id;
             toggleVisibility(logout);
             toggleVisibility(deleteAccountButton)
-            toggleVisibility(loginFormBox)
+            game.classList.remove('inactive')
             toggleDisable(startButton);
             toggleDisable(myGamesButton);
+            lockBoard = true;
         })
     }
 
@@ -102,9 +105,10 @@ window.addEventListener('DOMContentLoaded', e => {
 
 // logout stuff
     function handleLogout() {
-        toggleVisibility(loginFormBox)
+        toggleVisibility(loginForm)
         toggleVisibility(logout)
         toggleVisibility(deleteAccountButton)
+        game.classList.add('inactive')
         resetInfo();
     }
 
@@ -146,6 +150,7 @@ window.addEventListener('DOMContentLoaded', e => {
 
 
     function startGame() {
+
         if (!stopButton.disabled) {
             toggleDisable(stopButton)
         }
@@ -205,7 +210,8 @@ window.addEventListener('DOMContentLoaded', e => {
         console.log(data)
         toggleDisable(stopButton)
         savedGameInfo.innerHTML = "";
-        savedGameInfo.innerHTML = `<h4 class="game-saved">GAME <br> SAVED</h4>
+        savedGameInfo.innerHTML = 
+        `<h4 class="game-saved">GAME  SAVED</h4>
             <div class="game-card">
                 <div class="ui segments">
                     <div class="ui segment"><h6>User:</h6></div>
@@ -327,6 +333,19 @@ window.addEventListener('DOMContentLoaded', e => {
         if (games.length == 0) {
             emptyMessage(leaderBoardContent)
         }
+        const div = document.createElement('div')
+        div.id = `game${game.id}`;
+        div.className = "game-card cat";
+        const h51 = document.createElement('h4')
+        h51.textContent = "User:"
+        const h52 = document.createElement('h4')
+        h52.textContent = "Total Time: " 
+        const h6 = document.createElement('h4')
+        h6.textContent = "Comment:"
+        div.appendChild(h51)
+        div.appendChild(h52)
+        div.appendChild(h6)
+        leaderBoardContent.appendChild(div)
         games.forEach(game => addGame(game, leaderBoardContent))
         
     }
@@ -337,11 +356,11 @@ window.addEventListener('DOMContentLoaded', e => {
         div.id = `game${game.id}`;
         div.className = "game-card";
         const h51 = document.createElement('h5')
-        h51.innerHTML = `User: ${game.user.username}`
+        h51.innerHTML = `${game.user.username}`
         const h52 = document.createElement('h5')
-        h52.innerHTML =`Total Time: ${calculateTime(game.totaltime)}` 
+        h52.innerHTML =`${calculateTime(game.totaltime)}` 
         const h6 = document.createElement('h5')
-        h6.innerHTML =`Comment: ${game.comment}`
+        h6.innerHTML =`${game.comment}`
         
         div.appendChild(h51)
         div.appendChild(h52)
@@ -402,9 +421,21 @@ window.addEventListener('DOMContentLoaded', e => {
 
     function addMyGames(games) {
         if (games.length == 0) {
-            console.log(" sdhere")
             emptyMessage(myGamesContent)
         }
+        const div = document.createElement('div')
+        div.id = `game${game.id}`;
+        div.className = "game-card cat";
+        const h51 = document.createElement('h4')
+        h51.textContent = "User:"
+        const h52 = document.createElement('h4')
+        h52.textContent = "Total Time: " 
+        const h6 = document.createElement('h4')
+        h6.textContent = "Comment:"
+        div.appendChild(h51)
+        div.appendChild(h52)
+        div.appendChild(h6)
+        myGamesContent.appendChild(div)
         games.forEach(game=> addGame(game, myGamesContent))
     }
     
@@ -412,18 +443,48 @@ window.addEventListener('DOMContentLoaded', e => {
         displayModal(myGamesModal)
     }
 
+//show Rules 
+    function showRules() {
+        Swal.fire({
+            title: 'RULES!',
+            
+            html: `<p>Learn how to Recycle with this memory card game! </p>
+            <br>
+            <p>Login with your Username or create a New Username to store your games. </p>
+            <p>Click the "Start Game" to start the timer and begin playing!</p>
+            <br><p>Match the recycling symbol with it's proper description (there is a freebee too!). When all cards are matched, select "Finished" to end the game. </p>
+            <br><p>To Start Over before finishing a game, click the "Restart Game" button. </p>
+            <br><p>To save the game (and possibly make it to the leaderboard), enter a comment and hit "Save".</p>
+            <p>Have Fun!</p>
+            <br>
+            <p style="font-size: small">(&remember to check with your local Recycling Center if you have questions!)<p>`   
+            ,
+            width: 600,
+            padding: '2em',
+            imageUrl: 'img/background3.jpg',
+            imageWidth: 300,
+            imageAlt: 'Custom image',
+            backdrop: `
+              rgba(0,0,123,0.4)
+              url("https://media.giphy.com/media/8zD1MUAlPZf8I/giphy.gif")
+              left top
+              no-repeat
+            `
+        })
 
+    }
 //card functionality
     
     function flipCard() {
         if(!usernameName) {
-            alert("Log In to Play!")
+             
+            Swal.fire('Please Login to Play!')
             return;
         }
-        if (lockBoard) { 
-            alert("Press Start To Play!")
+        if(lockBoard){
             return;
         }
+
         if (this === firstCard) return;
 
         this.classList.add('flip');
