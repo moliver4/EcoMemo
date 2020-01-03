@@ -177,7 +177,9 @@ window.addEventListener('DOMContentLoaded', e => {
         <div class="ui input" id="save-game-form-div" >
             <form autocomplete="off" id="save-game-form" method="post">
                 <h3>Enter a Comment Before Saving:</h3>
-                <input id="comment-field" type="text" name="comment" placeholder="Comment">
+                <div class="comment-input-container">
+                    <input id="comment-field" type="text" name="comment" placeholder="Comment">
+                </div>
                 <br><br>
                 <input class="form-button" type="submit" value="Save My Game!">
                 <br><br>
@@ -512,7 +514,7 @@ window.addEventListener('DOMContentLoaded', e => {
         pairs++
 
         resetBoard();
-        if (pairs == 1) {
+        if (pairs == 10) {
             toggleDisable(stopButton); //allow stop when all cards are flipped
         }
     }

@@ -104,6 +104,7 @@
   .memory-game.inactive {
     opacity: 20%;
   }
+
   .ribbon {
     background: hsl(30, 90%, 65%) url(http://portfolio.queenofwhisks.com/demo/overlay/noise.png);
     box-shadow: 2px 6px 12px rgba(0,0,0,0.5);
@@ -144,6 +145,7 @@
     display: block;
     padding: 0.6875em 0;
   }
+
   .front-face,
   .back-face {
     width: 100%;

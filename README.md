@@ -29,6 +29,8 @@ Flip-Card Tutorial from [Marina Ferreira](https://www.freecodecamp.org/news/vani
 
 Additional CSS effects from [Bennett Feely](https://codepen.io/bennettfeely/pen/CkHng), [EAH](https://codepen.io/harlleye/pen/jEJeb)
 
+Cool  Alerts by [Sweet Alert](https://sweetalert2.github.io/#examples)
+
 Icons from [Flaticon](https://www.flaticon.com/home)
 
 Photos from [Unsplash](https://unsplash.com/)
