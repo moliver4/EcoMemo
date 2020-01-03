@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', e => {
     const deleteAccountButton = document.querySelector("#delete-account")
     const deleteAccountContent = document.querySelector("#delete-account-content")
     const rulesButton = document.querySelector("#rules")
+    const doMoreButton = document.querySelector("#do-more")
 
     const closeDeleteModalX = document.querySelector("#close-delete-account")
     const closeSaveModalX = document.querySelector("#close-save-game")
@@ -34,6 +35,7 @@ window.addEventListener('DOMContentLoaded', e => {
     stopButton.addEventListener('click', stopGame)
     logout.addEventListener('click', handleLogout)
     rulesButton.addEventListener('click', showRules)
+    doMoreButton.addEventListener('click', showDoMore)
 
     leaderBoardButton.addEventListener('click', handleLeaderBoard)
     myGamesButton.addEventListener('click', handleMyGames)
@@ -269,8 +271,7 @@ window.addEventListener('DOMContentLoaded', e => {
 //modal functionality
 
     function displayModal(modal) {
-        modal.style.display = "block";
-        
+        modal.style.display = "block";    
     }
 
     function hideModal(modal) {
@@ -304,8 +305,7 @@ window.addEventListener('DOMContentLoaded', e => {
         })
         .then(confirmDeletion)
         .then(setTimeout(function(){deleteAccountModal.style.display = "none"}, 3000))
-        .then(setTimeout(handleLogout, 3000))
-        
+        .then(setTimeout(handleLogout, 3000)) 
     }
 
 
@@ -315,7 +315,6 @@ window.addEventListener('DOMContentLoaded', e => {
         h3.textContent = `Fine, ${usernameName}. Your Account has been deleted and you will be logged out now...`
         deleteAccountContent.appendChild(h3)
         displayModal(deleteAccountModal)
-   
     }
 
 //leaderboard stuff      leaderBoardContent
@@ -353,7 +352,6 @@ window.addEventListener('DOMContentLoaded', e => {
     }
     
     function addGame(game, node) {
-
         const div = document.createElement('div')
         div.id = `game${game.id}`;
         div.className = "game-card";
@@ -469,6 +467,44 @@ window.addEventListener('DOMContentLoaded', e => {
             backdrop: `
               rgba(0,0,123,0.4)
               url("https://media.giphy.com/media/8zD1MUAlPZf8I/giphy.gif")
+              left top
+              no-repeat
+            `
+        })
+
+    }
+
+    function showDoMore() {
+        Swal.fire({
+            title: "Let's Do More",
+            
+            html: `
+            <p style="font-size: small"> - More Recycling <a href="https://www.recycleacrossamerica.org/tips-to-recycle-right"> Tips Here </a></p>
+            <p style="font-size: small"><p style="font-size: small">- Know what CAN'T be recycled. </p> <p style="font-size: small"> - Ex: plastic bags, styrofoam, tissue and food related paper.</p> <p style="font-size: small"> - <a href="https://www.buzzfeed.com/tomvellner/heres-how-to-start-composting-in-2018">Compost </a> all food and food-soiled paper when possible. </p>
+            <p style="font-size: small">- Many metal items like cans, spray cans, tin foil, can also be recycled. Glass containers as well. </p>
+           <p style="font-size: small">- Avoid Single Use Plastic</p>
+           <p style="font-size: small">- Invest in and use re-usable bags & water bottles!</p>
+           <p style="font-size: small">- Use carpool/public transportation whenever possible.</p>
+           <p style="font-size: small">- Eat as <a href="https://www.pcrm.org/news/blog/how-eating-more-plants-can-save-lives-and-planet">Plant-Based</a> as possible.</p>
+           <p style="font-size: small">- Put your money where your mouth/home is and invest in sustainable options.</p>
+           <p style="font-size: small"> Additional resources: </p>
+         
+           <p style="font-size: small"> ~<a href="https://en.reset.org/act/12-things-you-can-do-climate-change-0"> Things We Can Do Right Now</a></p>
+           
+           <p style="font-size: small"> ~<a href="https://unfccc.int/"> Climate Change updates</a></p>
+           
+           <p style="font-size: small"> ~<a href="https://www.fridaysforfuture.org/"> Fridays for Future</a></p>
+           
+        
+           </p>
+            
+            `
+            ,
+            width: 600,
+            padding: '2em',
+            backdrop: `
+              rgba(0,0,123,0.4)
+              url('https://media.giphy.com/media/3og0IBq1emkEfTmU9i/giphy.gif')
               left top
               no-repeat
             `

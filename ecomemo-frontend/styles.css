@@ -64,7 +64,7 @@
   }
 
   .game-card {
-    padding: 5px white;
+    padding: 5px rgb(235, 238, 245);
     border-radius: 3px;
     margin-left: 20px;
     margin-right: 20px;
@@ -103,6 +103,23 @@
 
   .memory-game.inactive {
     opacity: 20%;
+  }
+
+
+  .front-face,
+  .back-face {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    position: absolute;
+    border-radius: 5px;
+    border: 2px solid white;
+    background: rgba(6,141,157,0.9);
+    backface-visibility: hidden;
+  }
+  
+  .front-face {
+    transform: rotateY(180deg);
   }
 
   .ribbon {
@@ -146,21 +163,6 @@
     padding: 0.6875em 0;
   }
 
-  .front-face,
-  .back-face {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    position: absolute;
-    border-radius: 5px;
-    border: medium solid white;
-    background: rgba(6,141,157,0.9);
-    backface-visibility: hidden;
-  }
-  
-  .front-face {
-    transform: rotateY(180deg);
-  }
 
   #left-container {
     align-content: center;
