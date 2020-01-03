@@ -448,7 +448,7 @@ window.addEventListener('DOMContentLoaded', e => {
         Swal.fire({
             title: 'RULES!',
             
-            html: `<p>Learn how to Recycle with this memory card game! </p>
+            html: `<p>Learn how to your Recycling Symbols with this memory card game! </p>
             <br>
             <p>Login with your Username or create a New Username to store your games. </p>
             <p>Click the "Start Game" to start the timer and begin playing!</p>
