@@ -14,9 +14,11 @@ Login to play!
 
 ## Usage
 Website Layout - Login - Functionality - Start Game
+
 [![Ecomemo Demo Part 1](http://img.youtube.com/vi/2FS6dpiWeZw/0.jpg)](http://www.youtube.com/watch?v=2FS6dpiWeZw "Ecomemo Demo Part 1") 
 
 Finish Game - Save Game - Logout
+
 [![Ecomemo Demo Part 2](http://img.youtube.com/vi/Ee7n20BxfXo/0.jpg)](http://www.youtube.com/watch?v=Ee7n20BxfXo "Ecomemo Demo Part 2")
 
 ## Contributing
