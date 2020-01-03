@@ -18,6 +18,10 @@ Website Layout - Login - Functionality - Start Game
 
 Finish Game - Save Game - Logout
 [![Ecomemo Demo Part 2](http://img.youtube.com/vi/Ee7n20BxfXo/0.jpg)](http://www.youtube.com/watch?v=Ee7n20BxfXo "Ecomemo Demo Part 2")
+<<<<<<< HEAD
+=======
+
+>>>>>>> rollback
 
 
 ## Contributing
